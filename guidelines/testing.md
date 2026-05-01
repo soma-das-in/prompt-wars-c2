@@ -28,6 +28,17 @@ Invalid text age | Error |
 
 ---
 
+## Automated Unit Testing
+
+Automated logic tests will be implemented using `pytest` to ensure backend stability and verify logic without manual intervention.
+
+**Key Automated Logic Tests:**
+- **Eligibility Logic (`/eligibility`):** Test boundary conditions (e.g., age 17 returns ineligible, age 18 returns eligible).
+- **Static Data Loading:** Verify that `static_content.json` parses correctly and the schema matches expectations.
+- **API Routing & Validation:** Ensure endpoints reject malformed requests (e.g., empty chat queries) with appropriate HTTP 422 errors.
+
+---
+
 ## API Testing
 
 Test endpoints:

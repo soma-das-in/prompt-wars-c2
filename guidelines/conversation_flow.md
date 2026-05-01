@@ -148,7 +148,7 @@ User: Hindi question
 
 Assistant responds in Hindi.
 
-The AI model automatically detects and responds in the user's language.
+The AI model automatically detects and responds in the user's language. Note: This multilingual support applies only to the Vertex AI Chat outputs. The main UI remains in English.
 
 ---
 

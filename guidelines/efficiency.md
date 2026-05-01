@@ -56,7 +56,7 @@ Information such as:
 - Voting steps
 - FAQs
 
-is stored locally to reduce AI calls.
+is stored locally using the structured JSON schema defined in `static_data_format.md` to reduce AI calls.
 
 ---
 

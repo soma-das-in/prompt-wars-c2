@@ -28,7 +28,7 @@ Using simple language.
 
 ## Multilingual Support
 
-The AI model can respond in multiple Indian languages.
+The Vertex AI Chat outputs can respond in multiple Indian languages. The main UI will remain in English.
 
 Example languages:
 

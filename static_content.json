@@ -1,0 +1,56 @@
+{
+  "election_process": [
+    {
+      "step": 1,
+      "title": "Voter Registration",
+      "description": "Eligible citizens register their names in the electoral roll via the NVSP portal or physically."
+    },
+    {
+      "step": 2,
+      "title": "Election Announcement",
+      "description": "The Election Commission of India announces the election dates and the Model Code of Conduct comes into effect."
+    },
+    {
+      "step": 3,
+      "title": "Candidate Nominations",
+      "description": "Candidates file their nomination papers, which are scrutinized by the Returning Officer."
+    },
+    {
+      "step": 4,
+      "title": "Campaigning",
+      "description": "Political parties and candidates campaign to present their manifestos to the public. Campaigning stops 48 hours before voting."
+    },
+    {
+      "step": 5,
+      "title": "Voting Day",
+      "description": "Registered voters visit polling stations to cast their votes using Electronic Voting Machines (EVMs) and VVPATs."
+    },
+    {
+      "step": 6,
+      "title": "Counting and Results",
+      "description": "Votes are counted under the supervision of the Election Commission, and the results are declared."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "How do I register to vote?",
+      "answer": "You can register to vote online through the National Voters' Service Portal (NVSP) or by filling out Form 6 and submitting it to your Electoral Registration Officer."
+    },
+    {
+      "question": "What happens on voting day?",
+      "answer": "On voting day, you must visit your designated polling booth with an approved ID. Your identity will be verified, an indelible ink mark will be applied to your finger, and you will cast your vote using the EVM."
+    },
+    {
+      "question": "Am I eligible to vote in India?",
+      "answer": "You are eligible if you are an Indian citizen, 18 years of age or older as of the qualifying date, and ordinarily resident of the polling area."
+    },
+    {
+      "question": "What documents are needed for voter ID?",
+      "answer": "You will need a passport-sized photograph, an age proof (e.g., birth certificate, 10th class mark sheet), and a residence proof (e.g., Aadhaar card, passport, utility bill)."
+    },
+    {
+      "question": "What if I lose my voter ID?",
+      "answer": "You can apply for a duplicate EPIC online via the NVSP portal or at your local electoral office."
+    }
+  ]
+}

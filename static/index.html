@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoteAssist — Your Indian Election Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="modern-theme">
+    <div class="glass-background"></div>
+    
+    <header class="main-header">
+        <div class="header-content container">
+            <div class="logo-area">
+                <span class="logo-icon">🗳️</span>
+                <div class="logo-text">
+                    <h1>VoteAssist</h1>
+                    <span class="tagline">Empowering Indian Voters</span>
+                </div>
+            </div>
+            <nav class="header-nav">
+                <a href="#chat" class="nav-link">Assistant</a>
+                <a href="#eligibility" class="nav-link">Eligibility</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-layout container">
+        <section class="hero-section">
+            <h2 class="display-text">Your voice matters. <br><span class="gradient-text">Understand the process.</span></h2>
+            <p class="hero-subtitle">VoteAssist helps you navigate voter registration, eligibility, and the Indian electoral system with ease.</p>
+        </section>
+
+        <div class="content-grid">
+            <section id="chat" class="chat-section card glass">
+                <div class="card-header">
+                    <h3>Election Assistant</h3>
+                    <div class="status-indicator">
+                        <span class="pulse"></span>
+                        <span class="status-text">AI Ready</span>
+                    </div>
+                </div>
+                
+                <div class="faq-container">
+                    <p class="section-label">Suggested Questions</p>
+                    <div id="faq-buttons" class="button-group horizontal-scroll">
+                        <!-- Buttons injected via JS -->
+                    </div>
+                </div>
+
+                <div id="chat-window" class="chat-viewport" aria-live="polite">
+                    <div class="message assistant-message first-message">
+                        <p>Welcome! I'm your Indian election guide. How can I help you today?</p>
+                    </div>
+                </div>
+                
+                <form id="chat-form" class="chat-input-wrapper">
+                    <input type="text" id="chat-input" placeholder="Type your question here..." required aria-label="Ask a question">
+                    <button type="submit" id="send-btn" class="icon-btn" aria-label="Send message">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </form>
+                <div id="loading-indicator" class="typing-indicator hidden">
+                    <span></span><span></span><span></span>
+                </div>
+            </section>
+
+            <aside class="sidebar">
+                <section id="eligibility" class="eligibility-card card glass">
+                    <div class="card-header">
+                        <h3>Quick Eligibility Check</h3>
+                    </div>
+                    <form id="eligibility-form" class="modern-form">
+                        <div class="form-group">
+                            <label for="age">What is your age?</label>
+                            <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g. 25" required>
+                        </div>
+                        <div class="form-group custom-checkbox">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="citizen" name="citizen">
+                                <span class="checkmark"></span>
+                                <span class="label-text">I am an Indian Citizen</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="primary-btn full-width">Verify Now</button>
+                    </form>
+                    <div id="eligibility-result" class="result-display hidden"></div>
+                </section>
+
+                <section class="info-card card glass">
+                    <h3>Did you know?</h3>
+                    <p>India is the world's largest democracy with over 900 million registered voters.</p>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="main-footer container">
+        <p>&copy; 2026 VoteAssist. For educational purposes only.</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

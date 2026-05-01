@@ -1,0 +1,20 @@
+- `[x]` **Phase 1: Project Initialization & Data Layer**
+  - `[x]` Create `requirements.txt`
+  - `[x]` Create `static_content.json`
+- `[x]` **Phase 2: Backend Development**
+  - `[x]` Setup FastAPI app (`app/main.py`)
+  - `[x]` Implement `/api/eligibility`
+  - `[x]` Implement `/api/static-content`
+  - `[x]` Implement `/api/chat` (Vertex AI integration)
+- `[x]` **Phase 3: Frontend Development**
+  - `[x]` Create `static/index.html`
+  - `[x]` Create `static/styles.css`
+  - `[x]` Create `static/app.js`
+- `[x]` **Phase 4: Containerization**
+  - `[x]` Create `Dockerfile`
+  - `[x]` Create `.dockerignore`
+- `[x]` **Phase 5: Automated Testing**
+  - `[x]` Create `test_main.py`
+  - `[x]` Run `pytest`
+- `[ ]` **Phase 6: Deployment**
+  - `[ ]` Deploy to Google Cloud Run (`prompt-wars-hackathon-493408`, `us-central1`)
