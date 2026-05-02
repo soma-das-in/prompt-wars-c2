@@ -17,4 +17,4 @@
   - `[x]` Create `test_main.py`
   - `[x]` Run `pytest`
 - `[ ]` **Phase 6: Deployment**
-  - `[ ]` Deploy to Google Cloud Run (`prompt-wars-hackathon-493408`, `us-central1`)
+  - `[ ]` Deploy to Google Cloud Run 
