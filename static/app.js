@@ -1,6 +1,11 @@
+/**
+ * VoteAssist Frontend Application
+ * Handles chat interactions, voice assistance, and eligibility checks.
+ */
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Elements ---
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
     const chatWindow = document.getElementById('chat-window');
@@ -8,92 +13,80 @@ document.addEventListener('DOMContentLoaded', () => {
     const faqButtonsContainer = document.getElementById('faq-buttons');
     const eligibilityForm = document.getElementById('eligibility-form');
     const eligibilityResult = document.getElementById('eligibility-result');
-
     const micBtn = document.getElementById('mic-btn');
     const ttsAudio = document.getElementById('tts-audio');
 
-    // Fetch static content (FAQs) from Firestore
-    fetch('/api/static-content')
-        .then(res => res.json())
-        .then(data => {
-            faqButtonsContainer.innerHTML = ''; // Clear previous suggestions
-            if (data.faqs && data.faqs.length > 0) {
-                data.faqs.forEach(faq => {
-                    const btn = document.createElement('button');
-                    btn.className = 'suggested-btn';
-                    btn.textContent = faq.question;
-                    btn.addEventListener('click', () => {
-                        chatInput.value = faq.question;
-                        handleChatSubmit(new Event('submit'));
-                    });
-                    faqButtonsContainer.appendChild(btn);
+    // --- State & Config ---
+    let speechRecognition;
+
+    /**
+     * App Initialization
+     */
+    const init = () => {
+        loadFAQs();
+        setupSpeechRecognition();
+        attachEventListeners();
+    };
+
+    /**
+     * Fetches suggested questions from the backend
+     */
+    async function loadFAQs() {
+        try {
+            const response = await fetch('/api/static-content');
+            const data = await response.json();
+            
+            faqButtonsContainer.innerHTML = '';
+            const faqs = (data.faqs && data.faqs.length > 0) 
+                ? data.faqs.map(f => f.question)
+                : ["How to register?", "Am I eligible?", "When is the election?"];
+
+            faqs.forEach(text => {
+                const btn = document.createElement('button');
+                btn.className = 'suggested-btn';
+                btn.textContent = text;
+                btn.addEventListener('click', () => {
+                    chatInput.value = text;
+                    handleChatSubmit();
                 });
-            } else {
-                // Fallback suggestions if Firestore is empty
-                const defaults = ["How to register?", "Am I eligible?", "When is the election?"];
-                defaults.forEach(text => {
-                    const btn = document.createElement('button');
-                    btn.className = 'suggested-btn';
-                    btn.textContent = text;
-                    btn.addEventListener('click', () => {
-                        chatInput.value = text;
-                        handleChatSubmit(new Event('submit'));
-                    });
-                    faqButtonsContainer.appendChild(btn);
-                });
-            }
-        })
-        .catch(err => console.error("Failed to load FAQs", err));
-
-    // Browser-native STT (webkitSpeechRecognition)
-    let recognition;
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = 'en-IN'; // Default to English (India)
-
-        recognition.onstart = () => {
-            micBtn.classList.add('recording');
-        };
-
-        recognition.onend = () => {
-            micBtn.classList.remove('recording');
-        };
-
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            chatInput.value = transcript;
-            handleChatSubmit(new Event('submit'));
-        };
-
-        recognition.onerror = (event) => {
-            console.error("Speech recognition error", event.error);
-            micBtn.classList.remove('recording');
-        };
-    } else {
-        micBtn.classList.add('hidden');
+                faqButtonsContainer.appendChild(btn);
+            });
+        } catch (err) {
+            console.error("Failed to load FAQs:", err);
+        }
     }
 
-    micBtn.addEventListener('click', () => {
-        if (!recognition) {
-            console.error("Speech recognition not initialized.");
+    /**
+     * Initializes browser-native Speech Recognition
+     */
+    function setupSpeechRecognition() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (!SpeechRecognition) {
+            micBtn.classList.add('hidden');
             return;
         }
-        
-        try {
-            if (micBtn.classList.contains('recording')) {
-                recognition.stop();
-            } else {
-                recognition.start();
-            }
-        } catch (err) {
-            console.error("Recognition toggle error:", err);
-            micBtn.classList.remove('recording');
-        }
-    });
 
+        speechRecognition = new SpeechRecognition();
+        speechRecognition.continuous = false;
+        speechRecognition.interimResults = false;
+        speechRecognition.lang = 'en-IN';
+
+        speechRecognition.onstart = () => micBtn.classList.add('recording');
+        speechRecognition.onend = () => micBtn.classList.remove('recording');
+        speechRecognition.onresult = (event) => {
+            chatInput.value = event.results[0][0].transcript;
+            handleChatSubmit();
+        };
+        speechRecognition.onerror = (err) => {
+            console.error("Speech recognition error:", err.error);
+            micBtn.classList.remove('recording');
+        };
+    }
+
+    /**
+     * Handles Text-to-Speech playback
+     */
     async function playTTS(text) {
         try {
             const response = await fetch('/api/tts', {
@@ -101,19 +94,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text })
             });
+            
             if (response.ok) {
                 const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                ttsAudio.src = url;
+                ttsAudio.src = URL.createObjectURL(blob);
                 ttsAudio.play();
             }
         } catch (err) {
-            console.error("TTS playback failed", err);
+            console.error("TTS playback failed:", err);
         }
     }
 
+    /**
+     * Formats assistant message (markdown-like bold and lists)
+     */
     function formatMessage(text) {
-        // Escaping HTML to prevent XSS
         const escapeHTML = (str) => {
             const p = document.createElement('p');
             p.textContent = str;
@@ -121,61 +116,56 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         let formatted = escapeHTML(text);
-
-        // Bold: **text** -> <b>text</b>
         formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
-        // Lists: lines starting with * or -
         const lines = formatted.split('\n');
-        let inList = false;
-        let finalHtml = '';
+        let htmlResult = '';
+        let listType = null; // 'ul' or 'ol'
+
+        const closeList = () => {
+            if (listType) {
+                htmlResult += `</${listType}>`;
+                listType = null;
+            }
+        };
 
         lines.forEach(line => {
-            const trimmedLine = line.trim();
-            if (trimmedLine.startsWith('* ') || trimmedLine.startsWith('- ')) {
-                if (!inList) {
-                    finalHtml += '<ul>';
-                    inList = true;
-                }
-                finalHtml += `<li>${trimmedLine.substring(2)}</li>`;
-            } else if (trimmedLine.match(/^\d+\.\s/)) {
-                // Numbered lists: 1. text
-                if (!inList) {
-                    finalHtml += '<ol>';
-                    inList = true;
-                }
-                const content = trimmedLine.replace(/^\d+\.\s/, '');
-                finalHtml += `<li>${content}</li>`;
+            const trimmed = line.trim();
+            if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+                if (listType !== 'ul') { closeList(); htmlResult += '<ul>'; listType = 'ul'; }
+                htmlResult += `<li>${trimmed.substring(2)}</li>`;
+            } else if (trimmed.match(/^\d+\.\s/)) {
+                if (listType !== 'ol') { closeList(); htmlResult += '<ol>'; listType = 'ol'; }
+                htmlResult += `<li>${trimmed.replace(/^\d+\.\s/, '')}</li>`;
             } else {
-                if (inList) {
-                    finalHtml += formatted.includes('* ') ? '</ul>' : '</ol>';
-                    inList = false;
-                }
-                if (trimmedLine) {
-                    finalHtml += `<p>${trimmedLine}</p>`;
-                }
+                closeList();
+                if (trimmed) htmlResult += `<p>${trimmed}</p>`;
             }
         });
-
-        if (inList) {
-            finalHtml += formatted.includes('* ') ? '</ul>' : '</ol>';
-        }
-
-        return finalHtml;
+        closeList();
+        return htmlResult;
     }
 
+    /**
+     * Appends a message to the chat window
+     */
     function appendMessage(text, isUser) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'}`;
+        
         if (isUser) {
             msgDiv.textContent = text;
         } else {
             msgDiv.innerHTML = formatMessage(text);
         }
+        
         chatWindow.appendChild(msgDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
+    /**
+     * Handles the chat form submission
+     */
     async function handleChatSubmit(e) {
         if (e) e.preventDefault();
         
@@ -184,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         appendMessage(message, true);
         chatInput.value = '';
-        
         loadingIndicator.classList.remove('hidden');
 
         try {
@@ -194,47 +183,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ message })
             });
             
-            if (!response.ok) {
-                throw new Error("API Error");
-            }
+            if (!response.ok) throw new Error("Server Error");
 
             const data = await response.json();
             appendMessage(data.reply, false);
             
-            // Play TTS for assistant reply
-            // Remove markdown for better speech
-            const cleanText = data.reply.replace(/\*\*/g, '');
-            playTTS(cleanText);
+            // Clean markdown for TTS
+            playTTS(data.reply.replace(/\*\*/g, ''));
             
         } catch (error) {
-            appendMessage("Sorry, I encountered an error connecting to the server. Please try again later.", false);
+            appendMessage("Sorry, I encountered an error. Please try again later.", false);
         } finally {
             loadingIndicator.classList.add('hidden');
         }
     }
 
-    chatForm.addEventListener('submit', handleChatSubmit);
+    /**
+     * Attaches all event listeners
+     */
+    function attachEventListeners() {
+        chatForm.addEventListener('submit', handleChatSubmit);
 
-    eligibilityForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const age = parseInt(document.getElementById('age').value, 10);
-        const isCitizen = document.getElementById('citizen').checked;
+        micBtn.addEventListener('click', () => {
+            if (!speechRecognition) return;
+            if (micBtn.classList.contains('recording')) {
+                speechRecognition.stop();
+            } else {
+                speechRecognition.start();
+            }
+        });
 
-        try {
-            const response = await fetch('/api/eligibility', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ age, is_citizen: isCitizen })
-            });
-            const data = await response.json();
-            
-            eligibilityResult.textContent = data.message;
-            eligibilityResult.className = 'result-display ' + (data.status === 'eligible' ? 'result-eligible' : 'result-ineligible');
-            eligibilityResult.classList.remove('hidden');
-        } catch (error) {
-            eligibilityResult.textContent = "Error checking eligibility. Please try again.";
-            eligibilityResult.className = 'result-display result-ineligible';
-            eligibilityResult.classList.remove('hidden');
-        }
-    });
+        eligibilityForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const age = parseInt(document.getElementById('age').value, 10);
+            const isCitizen = document.getElementById('citizen').checked;
+
+            try {
+                const response = await fetch('/api/eligibility', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ age, is_citizen: isCitizen })
+                });
+                const data = await response.json();
+                
+                eligibilityResult.textContent = data.message;
+                eligibilityResult.className = `result-display ${data.status === 'eligible' ? 'result-eligible' : 'result-ineligible'}`;
+                eligibilityResult.classList.remove('hidden');
+            } catch (error) {
+                eligibilityResult.textContent = "Error checking eligibility. Please try again.";
+                eligibilityResult.className = 'result-display result-ineligible';
+                eligibilityResult.classList.remove('hidden');
+            }
+        });
+    }
+
+    // Run Init
+    init();
 });

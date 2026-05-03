@@ -1,15 +1,11 @@
 # Vote Assist – System Architecture
 
-## Overview
+## Problem Statement Alignment
 
-Vote Assist is an AI-powered assistant designed to help Indian voters understand the election process in a simple, interactive way.
-
-The system focuses on:
-- Election process education
-- Voter Registration Help
-- Voter eligibility guidance
-- Voting process explanation 
-- Frequently asked questions about elections
+Vote Assist is architected to solve the primary challenge of **inaccessible and fragmented election information** in India. The system transforms static, complex official data into an interactive, voice-enabled conversational guide, specifically targeting:
+- First-time voters who find official documents intimidating.
+- Users with accessibility needs (literacy, language, vision).
+- Citizens seeking a verified "source of truth" to combat misinformation.
 
 The architecture is designed to meet the following constraints:
 

@@ -1,7 +1,13 @@
 
 # Security Design
 
-Vote Assist follows safe and responsible implementation practices.
+## Goal Alignment
+
+Security in VoteAssist is not just about protection, but about **building trust**. By ensuring anonymity and providing grounded, verified information, we address the voter's need for a **safe and unbiased source of truth**.
+
+- **No Data Collection:** Addresses privacy concerns and encourages participation.
+- **Grounded AI:** Prevents hallucinations or misinformation by anchoring responses in official guidelines.
+- **Safety Layer:** Blocks political opinions or misinformation attempts.
 
 
 ## Data Privacy

@@ -13,15 +13,62 @@ The goal is to improve voter awareness and make election information easier to u
 
 Civic Technology – Election Education
 
-This project focuses on **Election Process Education for Indian voters**, helping users understand:
+---
 
-- How elections work in India
-- How to register as a voter
-- Eligibility requirements
-- What happens on voting day
-- Frequently asked voter questions
+# Problem Statement
 
-The assistant acts as a **digital guide for voters**, simplifying complex election information into easy-to-understand responses.
+Voter education in India faces several critical challenges that impact democratic participation:
+
+- **Fragmented Information:** Official election procedures, registration steps, and eligibility rules are often spread across multiple government portals, making it difficult for citizens—especially first-time voters—to find consolidated information.
+- **Complexity Barriers:** Legal and procedural jargon in election documents can be intimidating and difficult to understand for the general public.
+- **Accessibility Gaps:** Users with limited literacy, visual impairments, or those who prefer native languages often face barriers when accessing text-heavy official resources.
+- **Misinformation:** Without a reliable, instant source of truth, voters can be misled by rumors or incorrect information about voting procedures.
+
+**Target Users:** 
+1. **First-time voters** (Ages 18-21) seeking registration guidance.
+2. **Senior citizens** requiring clear, simple instructions on voting day procedures.
+3. **General voters** looking for quick answers to FAQs without navigating complex websites.
+
+---
+
+# How VoteAssist Addresses the Problem
+
+VoteAssist is designed to bridge the gap between complex election data and citizen understanding through a conversational, AI-driven interface.
+
+| Problem Area | VoteAssist Solution | Technology Used |
+|--------------|---------------------|-----------------|
+| **Fragmented Info** | Centralized knowledge base of FAQs and guides. | Google Cloud Firestore |
+| **Complexity** | Simplifies legal jargon into step-by-step guidance. | Vertex AI Gemini 2.5 |
+| **Accessibility** | Voice-first interaction and multilingual support. | Web Speech API & Google TTS |
+| **Speed/Accuracy** | Instant, grounded responses from trusted sources. | Vertex AI Gemini 2.5 |
+
+---
+
+# User Journey
+
+1. **Discovery:** A first-time voter lands on VoteAssist and sees "Suggested Questions" (e.g., "How do I register?").
+2. **Interaction:** The user clicks a suggested button or asks a custom question using their voice (in Hindi, Bengali, or English).
+3. **Guidance:** The assistant provides a simple, bulleted response explaining the registration process step-by-step.
+4. **Verification:** The user uses the "Voter Eligibility" tool to check if they meet age and citizenship requirements.
+5. **Action:** Empowered with clear instructions, the user follows the provided links to the official National Voters' Service Portal.
+
+---
+
+# Impact
+
+VoteAssist aims to drive significant civic impact by:
+- **Increasing Voter Turnout:** By simplifying the registration process, we remove the first barrier to voting.
+- **Reducing Misinformation:** Providing a verified source of truth grounded in official ECI guidelines.
+- **Enabling Inclusion:** Voice and multilingual support ensure that election education is accessible to all citizens, regardless of literacy levels or language preference.
+
+---
+
+# Usage Examples
+
+- *"How do I register to vote in India?"* → **Assistant provides a 4-step registration guide.**
+- *"What documents do I need for a voter ID?"* → **Assistant lists required age and address proofs.**
+- *"Is voting free?"* → **Assistant clarifies that voting is a free right and warns against scams.**
+- *"How to use an EVM?"* → **Assistant explains the ballot and beep process at the polling booth.**
 
 ---
 
@@ -206,6 +253,14 @@ The system is designed purely for **educational purposes**.
 
 ---
 
+# Running Tests
+
+The project includes a comprehensive suite of automated tests.Please see `tests/running_tests.md` for more details.
+
+The test suite uses **mocks** for all Google Cloud services, so no active GCP credentials or internet connection are required to run them.
+
+---
+
 # Assumptions
 
 The following assumptions were made for the MVP:
@@ -215,9 +270,4 @@ The following assumptions were made for the MVP:
 - Election information is sourced from trusted public resources.
 - The system is designed as a **lightweight hackathon prototype**, not a production election system.
 
----
-
-# Project Goal
-
-The goal of VoteAssist is to make **election education simple, accessible, and interactive**, helping citizens better understand the democratic process in India.
 

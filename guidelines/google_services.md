@@ -1,6 +1,13 @@
 # Google Services Integration
 
-VoteAssist meaningfully integrates Google Cloud services.
+VoteAssist meaningfully integrates Google Cloud services to solve critical voter education barriers: **Information Fragmentation, Complexity, and Accessibility.**
+
+| Google Service | Problem Addressed | Solution Impact |
+|----------------|-------------------|-----------------|
+| **Vertex AI** | Complex legal/procedural jargon. | Translates complex rules into simple, step-by-step guidance. |
+| **Firestore** | Fragmented official info. | Provides a centralized, structured knowledge base of FAQs. |
+| **TTS** | Accessibility barriers (literacy/vision). | Enables inclusive interaction for users who prefer listening. |
+| **Cloud Run** | Reliability and Scalability. | Ensures the tool is always available for millions of voters. |
 
 ---
 
