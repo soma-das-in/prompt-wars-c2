@@ -27,7 +27,16 @@ The system assumes that:
 - Users may not know election terminology
 - Users require simple explanations
 
-The system will provide general guidance and redirect users to official portals when necessary.
+The system will provide general guidance and redirect users to official portals 
+when necessary.
+
+---
+
+## Data Storage Assumptions
+
+The application uses Google Cloud Firestore to completely replace any existing static JSON files and store static educational content such as FAQs and election guides.
+
+Firestore remains stateless and read-only, and is not used to store personal voter information or user interaction data.
 
 ---
 
@@ -73,10 +82,10 @@ The MVP will include:
 - Eligibility checker
 - Voting process explanation
 - Frequently asked questions
+- Voice interaction (with usage constraints)
 
 The following are **out of scope for MVP**:
 
 - Polling booth lookup
 - Candidate information
 - Election notifications
-- Voice interface

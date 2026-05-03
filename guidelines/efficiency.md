@@ -68,3 +68,13 @@ AI calls occur only when:
 - Explanation is required
 
 Simple logic like eligibility checks run locally.
+
+## Efficient AI Usage
+
+To minimize calls to Vertex AI:
+
+1. The backend first checks Firestore for matching FAQs.
+2. If a relevant answer exists, it is returned directly.
+3. Only unanswered questions are sent to the AI model.
+
+This reduces latency and cloud costs.

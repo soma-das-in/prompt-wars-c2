@@ -56,3 +56,12 @@ The interface should:
 - Work on small screens
 - Avoid complex layouts
 - Load quickly on slow networks
+
+### Voice Assistance
+
+The application may support voice interaction to help users who may have difficulty typing or reading.
+
+Voice input and output can improve usability for:
+- elderly voters
+- first-time voters
+- users with limited literacy

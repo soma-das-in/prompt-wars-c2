@@ -109,6 +109,17 @@ Answers common questions such as:
 
 ---
 
+### Voice Interaction
+
+The assistant will support voice interaction to improve accessibility. To stay within budget, it includes the following constraints:
+- Enable voice only when the user clicks a microphone
+- Keep audio responses short
+- Limit audio to ≤10 seconds
+- Voice input using Google Cloud Speech-to-Text
+- Voice responses using Google Cloud Text-to-Speech
+
+---
+
 # Out of Scope for MVP
 
 To keep the project lightweight and within budget, the following features are excluded:
@@ -116,7 +127,6 @@ To keep the project lightweight and within budget, the following features are ex
 - Polling booth locator
 - Candidate profiles
 - Election notifications
-- Voice interface
 - User accounts
 - Personal data storage
 

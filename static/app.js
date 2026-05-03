@@ -9,11 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const eligibilityForm = document.getElementById('eligibility-form');
     const eligibilityResult = document.getElementById('eligibility-result');
 
-    // Fetch static content (FAQs)
+    const micBtn = document.getElementById('mic-btn');
+    const ttsAudio = document.getElementById('tts-audio');
+
+    // Fetch static content (FAQs) from Firestore
     fetch('/api/static-content')
         .then(res => res.json())
         .then(data => {
-            if (data.faqs) {
+            faqButtonsContainer.innerHTML = ''; // Clear previous suggestions
+            if (data.faqs && data.faqs.length > 0) {
                 data.faqs.forEach(faq => {
                     const btn = document.createElement('button');
                     btn.className = 'suggested-btn';
@@ -24,9 +28,89 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     faqButtonsContainer.appendChild(btn);
                 });
+            } else {
+                // Fallback suggestions if Firestore is empty
+                const defaults = ["How to register?", "Am I eligible?", "When is the election?"];
+                defaults.forEach(text => {
+                    const btn = document.createElement('button');
+                    btn.className = 'suggested-btn';
+                    btn.textContent = text;
+                    btn.addEventListener('click', () => {
+                        chatInput.value = text;
+                        handleChatSubmit(new Event('submit'));
+                    });
+                    faqButtonsContainer.appendChild(btn);
+                });
             }
         })
         .catch(err => console.error("Failed to load FAQs", err));
+
+    // Browser-native STT (webkitSpeechRecognition)
+    let recognition;
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-IN'; // Default to English (India)
+
+        recognition.onstart = () => {
+            micBtn.classList.add('recording');
+        };
+
+        recognition.onend = () => {
+            micBtn.classList.remove('recording');
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            chatInput.value = transcript;
+            handleChatSubmit(new Event('submit'));
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error", event.error);
+            micBtn.classList.remove('recording');
+        };
+    } else {
+        micBtn.classList.add('hidden');
+    }
+
+    micBtn.addEventListener('click', () => {
+        if (!recognition) {
+            console.error("Speech recognition not initialized.");
+            return;
+        }
+        
+        try {
+            if (micBtn.classList.contains('recording')) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        } catch (err) {
+            console.error("Recognition toggle error:", err);
+            micBtn.classList.remove('recording');
+        }
+    });
+
+    async function playTTS(text) {
+        try {
+            const response = await fetch('/api/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                ttsAudio.src = url;
+                ttsAudio.play();
+            }
+        } catch (err) {
+            console.error("TTS playback failed", err);
+        }
+    }
 
     function formatMessage(text) {
         // Escaping HTML to prevent XSS
@@ -116,6 +200,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             appendMessage(data.reply, false);
+            
+            // Play TTS for assistant reply
+            // Remove markdown for better speech
+            const cleanText = data.reply.replace(/\*\*/g, '');
+            playTTS(cleanText);
+            
         } catch (error) {
             appendMessage("Sorry, I encountered an error connecting to the server. Please try again later.", false);
         } finally {
@@ -125,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     chatForm.addEventListener('submit', handleChatSubmit);
 
-    // Eligibility check
     eligibilityForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const age = parseInt(document.getElementById('age').value, 10);

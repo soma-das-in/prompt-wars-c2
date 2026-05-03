@@ -34,8 +34,10 @@ Automated logic tests will be implemented using `pytest` to ensure backend stabi
 
 **Key Automated Logic Tests:**
 - **Eligibility Logic (`/eligibility`):** Test boundary conditions (e.g., age 17 returns ineligible, age 18 returns eligible).
-- **Static Data Loading:** Verify that `static_content.json` parses correctly and the schema matches expectations.
-- **API Routing & Validation:** Ensure endpoints reject malformed requests (e.g., empty chat queries) with appropriate HTTP 422 errors.
+- **Firestore Integration:** Verify that static content retrieval from Firestore executes correctly and parses the expected schema.
+- **Voice Constraints:** Verify that Voice STT/TTS endpoints strictly reject audio exceeding 10 seconds and gracefully handle empty audio.
+- **API Routing & Validation:** Ensure endpoints reject malformed requests (e.g., empty chat queries, excessively long queries) with appropriate HTTP 422 errors.
+- **Error Handling:** Verify that Vertex AI or Firestore API failures return generic, safe user-friendly errors without leaking stack traces.
 
 ---
 

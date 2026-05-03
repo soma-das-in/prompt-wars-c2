@@ -1,6 +1,9 @@
 fastapi
 uvicorn
 google-cloud-aiplatform
+google-cloud-firestore
+google-cloud-texttospeech
+slowapi
 pydantic
 pytest
 httpx

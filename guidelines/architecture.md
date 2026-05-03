@@ -26,9 +26,19 @@ User Browser
 ↓  
 Frontend (HTML + JavaScript)  
 ↓  
-Cloud Run Service (FastAPI backend)  
+Voice Input → Speech-to-Text  
 ↓  
-Vertex AI Gemini Model
+Backend API (FastAPI on Google Cloud Run)  
+↓  
+Firestore (FAQs and guides)  
+↓  
+Vertex AI Gemini  
+↓  
+Text Response  
+↓  
+Text-to-Speech  
+↓  
+Voice Output
 
 ---
 
@@ -74,6 +84,42 @@ Endpoints:
 | `/eligibility` | Checks voting eligibility |
 
 ---
+## Data Storage
+
+The system uses Google Cloud Firestore for lightweight data storage.
+
+Firestore stores:
+
+- Frequently asked voter questions
+- Election process guides
+- Official election resource links
+
+The database is read-heavy and stores only static or public information.
+
+No personal voter data is collected or stored.
+
+### Firestore Data Model
+
+Collections:
+
+**faqs**
+- question
+- answer
+- category
+
+**guides**
+- title
+- steps
+
+**resources**
+- name
+- url
+- description
+
+These collections store publicly available election education information such as voter FAQs, election process guides, and official election resources.
+
+
+---
 
 ### 3. AI Layer
 
@@ -113,7 +159,7 @@ All requests are processed statelessly.
 
 - No user accounts
 - No personal information collected
-- No database required
+
 
 ---
 
@@ -124,4 +170,3 @@ Possible future extensions:
 - Polling booth locator
 - Real-time election timelines
 - Integration with voter databases
-- Voice interaction

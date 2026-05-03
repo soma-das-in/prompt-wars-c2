@@ -26,6 +26,16 @@ Benefits:
 - Reduced attack surface
 - Better privacy protection
 
+## Data Storage Security
+
+The application only stores public election education content.
+
+The system must:
+
+- Not store personal voter data
+- Avoid storing user conversations
+- Use read-only access where possible
+
 
 ## Input Validation
 
@@ -44,17 +54,20 @@ The AI prompt ensures that the assistant:
 - Avoids political opinions
 - Avoids misinformation
 
-## Secure Deployment
+## Secure Deployment & Code Quality
 
 Deployment uses:
 
 - Google Cloud Run
-- IAM permissions
+- IAM permissions with least privilege
 
-Best practices:
+Code Quality and Security Best Practices:
 
-- Do not expose API keys
-- Use environment variables
+- **API Security:** Implement CORS policies restricted to the frontend domain.
+- **Rate Limiting:** Enforce rate limiting on the `/chat` and voice endpoints to prevent abuse and budget exhaustion.
+- **Secret Management:** Do not expose API keys; use secure environment variables and GCP Secret Manager if possible.
+- **Code Quality:** Use standard Python linting (e.g., `flake8`, `black`) and strict typing with FastAPI.
+- **Error Handling:** Never expose raw stack traces to the frontend; return sanitized error messages.
 
 ## Responsible AI
 

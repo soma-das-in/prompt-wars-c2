@@ -1,12 +1,14 @@
 # Static Data Format Guide
 
-To minimize unnecessary calls to the Vertex AI model and maintain low API usage costs, VoteAssist relies on local static data to provide standard information such as election process steps and frequently asked questions (FAQs).
+**NOTE: The JSON file approach described below has been completely replaced by Google Cloud Firestore.** Firestore now serves as the stateless, read-only data source for FAQs and guides. This document is retained solely for historical schema reference.
 
-This document defines the schema for the JSON file used to store this static content.
+To minimize unnecessary calls to the Vertex AI model and maintain low API usage costs, VoteAssist historically relied on local static data to provide standard information such as election process steps and frequently asked questions (FAQs).
+
+This document defines the schema for the JSON file that was originally used to store this static content.
 
 ## Schema Definition
 
-The static content should be stored in a `static_content.json` file on the server.
+The static content was stored in a `static_content.json` file on the server.
 
 ### Example JSON Structure
 
